@@ -4,8 +4,6 @@ import { Link } from "react-router-dom";
 import { ImGithub, ImLinkedin2 } from "react-icons/im";
 
 
-// Images
-import ShareAndLearnLogo from "../../assets/Logo/Logo-Full-Light.png";
 
 // footer data
 const BottomFooter = ["Privacy Policy", "Cookie Policy", "Terms"];
