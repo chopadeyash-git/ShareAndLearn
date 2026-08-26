@@ -3,13 +3,17 @@ const nodemailer = require('nodemailer');
 const mailSender = async (email, title, body) => {
     try {
         const transporter = nodemailer.createTransport({
+            service: 'gmail',
             host: process.env.MAIL_HOST,
-            port: 587,
-            secure: false,
+            port: 465,
+            secure: true,
             auth: {
                 user: process.env.MAIL_USER,
                 pass: process.env.MAIL_PASS
-            }
+            },
+            connectionTimeout: 10000,
+            greetingTimeout: 10000,
+            socketTimeout: 10000,
         });
 
         const info = await transporter.sendMail({
@@ -19,7 +23,7 @@ const mailSender = async (email, title, body) => {
             html: body
         });
 
-        // console.log('Info of sent mail - ', info);
+        console.log('Mail sent successfully to - ', email);
         return info;
     }
     catch (error) {
