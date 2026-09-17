@@ -2,8 +2,40 @@ const { Resend } = require('resend');
 const nodemailer = require('nodemailer');
 
 const mailSender = async (email, title, body) => {
-    // Use Resend HTTP API if API key is available (works on Render/cloud)
-    if (process.env.RESEND_API_KEY) {
+    // Use Brevo HTTP API if API key is available (Best for Render without domain verification)
+    if (process.env.BREVO_API_KEY) {
+        try {
+            const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+                method: 'POST',
+                headers: {
+                    'accept': 'application/json',
+                    'api-key': process.env.BREVO_API_KEY,
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    sender: { email: process.env.MAIL_USER, name: "Share And Learn" },
+                    to: [{ email: email }],
+                    subject: title,
+                    htmlContent: body
+                })
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                console.log('Brevo error - ', email, error);
+                return null;
+            }
+
+            const data = await response.json();
+            console.log('Mail sent successfully (Brevo) to - ', email);
+            return data;
+        }
+        catch (error) {
+            console.log('Error while sending mail (Brevo) - ', email, error);
+        }
+    }
+    // Use Resend HTTP API if API key is available
+    else if (process.env.RESEND_API_KEY) {
         try {
             const resend = new Resend(process.env.RESEND_API_KEY);
 
