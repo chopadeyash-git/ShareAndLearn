@@ -32,8 +32,8 @@ const mailSender = async (email, title, body) => {
             const transporter = nodemailer.createTransport({
                 service: 'gmail',
                 host: process.env.MAIL_HOST,
-                port: 465,
-                secure: true,
+                port: 587,
+                secure: false, // true for 465, false for other ports
                 auth: {
                     user: process.env.MAIL_USER,
                     pass: process.env.MAIL_PASS
